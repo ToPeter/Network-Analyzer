@@ -1,0 +1,42 @@
+00	Echo Reply
+01	Unassigned
+02	Unassigned
+03	Destination Unreachable
+04	Source Quench
+05	Redirect
+06	Alternate Host Address
+07	Unassigned
+08	Echo
+09	Router Advertisement
+0a	Router Selection
+0b	Time Exceeded
+0c	Parameter Problem
+0d	Timestamp
+0e	Timestamp Reply
+0f	Information Request
+10	Information Reply
+11	Address Mask Request
+12	Address Mask Reply
+13	Reserved (for Security)
+14	Reserved (for Robustness Experiment)
+15	Reserved (for Robustness Experiment)
+16	Reserved (for Robustness Experiment)
+17	Reserved (for Robustness Experiment)
+18	Reserved (for Robustness Experiment)
+19	Reserved (for Robustness Experiment)
+1a	Reserved (for Robustness Experiment)
+1b	Reserved (for Robustness Experiment)
+1c	Reserved (for Robustness Experiment)
+1d	Reserved (for Robustness Experiment)
+1e	Traceroute
+1f	Datagram Conversion Error
+20	Mobile Host Redirect
+21	IPv6 Where-Are-You
+22	IPv6 I-Am-Here
+23	Mobile Registration Request
+24	Mobile Registration Reply
+25	Domain Name Request
+26	Domain Name Reply
+27	SKIP
+28	Photuris
+29	Reserved

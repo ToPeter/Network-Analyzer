@@ -1,0 +1,35 @@
+05DC	IEEE 802.3 length.
+0600	XEROX NS IDP.
+0660	DLOG
+0661	DLOG
+0800	IP
+0801	X.75 Internet
+0802	NBS Internet komunikacie
+0803	ECMA Internet
+0804	Chaosnet
+0805	X.25 Level 3
+0806	ARP
+0807	XNS compatability.
+0808	FrameRelayARP
+8035	DRARP_RARP
+80F3	AARP AppleTalk Address Resolution Protocol.
+8100	EAPS Ethernet Automatic Protection Switching.
+8137	IPX Internet Packet Exchange.
+814C	SNMP Simple Network Management Protocol.
+86DD	IPv6
+8808	MPCP Multi-Point Control Protocol.
+880B	PPP Point-to-Point Protocol.
+880C	GSMP General Switch Management Protocol.
+8847	MPLS Multi-Protocol Label Switching (unicast).
+8848	MPLS Multi-Protocol Label Switching (multicast).
+8863	PPPoEdicovery PPP Over Ethernet (Discovery Stage).
+8864	PPPoEpppSession PPP Over Ethernet (PPP Session Stage).
+886F	Network Load Balancing.
+888E	EAPOL EAP over LAN.
+88A2	AoE ATA over Ethernet.
+88A4	EtherCAT
+88CA	TIPC Transparent Inter Process Communication Protocol.
+88BB	LWAPP Light Weight Access Point Protocol.
+88CC	LLDP Link Layer Discovery Protocol.
+88DC	WSMP WAVE Short Message Protocol.
+FFFF	reserved
