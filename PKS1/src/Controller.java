@@ -7,54 +7,54 @@ import java.util.Collections;
 import javax.swing.JFileChooser;
 import javax.swing.JTextArea;
 
-import GUI.Okno;
+import GUI.GUI;
 import Objects.ICMP;
 import Objects.Ip;
-import Objects.Ramec;
-import Objects.Velkost;
+import Objects.Frame;
+import Objects.Size;
 
 
 public class Controller {
-	private Okno okno; 
-	private HlavnaTrieda hlavna;
-	private ArrayList<Ramec> vyfiltrovane = new ArrayList<Ramec>();
-	private ArrayList<ICMP> ipecky2 = new ArrayList<ICMP>();
+	private GUI window; 
+	private MainClass main;
+	private ArrayList<Frame> filtered = new ArrayList<Frame>();
+	private ArrayList<ICMP> IPs2 = new ArrayList<ICMP>();
 	
-	public static final int POCET_INTERVALOV = 20;
+	public static final int NUMBER_OF_INTERVALS = 20;
 	
 	
-	public Controller(HlavnaTrieda hlavna, Okno okno){
-		this.okno=okno;
-		this.hlavna=hlavna;
+	public Controller(MainClass main, GUI window){
+		this.window=window;
+		this.main=main;
 		
-		this.okno.getBtn_analyzuj().addActionListener(new ActionListener() {
+		this.window.getBtn_analyze().addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Controller.this.hlavna.getRamce().clear();
-				Controller.this.hlavna.getIpecky1().clear();
-				if(Controller.this.hlavna.getPackety()!=null)
-					Controller.this.hlavna.getPackety().clear();
-				Controller.this.okno.getTextovaOblast().setText("");
-				Controller.this.hlavna.setFile(Controller.this.okno.getCesta().getText());
-				Controller.this.hlavna.nacitaj();
+				Controller.this.main.getFrames().clear();
+				Controller.this.main.getIPs1().clear();
+				if(Controller.this.main.getPackets()!=null)
+					Controller.this.main.getPackets().clear();
+				Controller.this.window.getTextArea().setText("");
+				Controller.this.main.setFile(Controller.this.window.getPath().getText());
+				Controller.this.main.load();
 				
-				uloha1();
-				if(!((String)Controller.this.okno.getKomboBox().getSelectedItem()).equals("ALL")){
-					Controller.this.okno.getTextovaOblast().setText("");
-					uloha3((String)Controller.this.okno.getKomboBox().getSelectedItem());
+				task1();
+				if(!((String)Controller.this.window.getKomboBox().getSelectedItem()).equals("ALL")){
+					Controller.this.window.getTextArea().setText("");
+					task2((String)Controller.this.window.getKomboBox().getSelectedItem());
 				}
 			}
 		});
 		
-		this.okno.getBtn_vyber().addActionListener(new ActionListener() {
+		this.window.getBtn_selection().addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fch = new JFileChooser();
-				int volba = fch.showOpenDialog(Controller.this.okno);
+				int volba = fch.showOpenDialog(Controller.this.window);
 				if(volba == 0){
-					Controller.this.okno.getCesta().setText(fch.getSelectedFile().getPath());
+					Controller.this.window.getPath().setText(fch.getSelectedFile().getPath());
 				}
 				//System.out.println(volba);
 				
@@ -63,273 +63,266 @@ public class Controller {
 		
 	}
 	
-	public void uloha1(){
-		JTextArea textovaOblast = okno.getTextovaOblast();
-		ArrayList<Ramec> ramce = hlavna.getRamce();
-		ArrayList<Ip> ipecky1 = hlavna.getIpecky1();
-		for(Ramec a: ramce)
-			textovaOblast.append(a.zakladnyVypis()+"\n");
-			//System.out.println(a.zakladnyVypis());
+	public void task1(){
+		JTextArea textArea = window.getTextArea();
+		ArrayList<Frame> frame = main.getFrames();
+		ArrayList<Ip> IPs1 = main.getIPs1();
+		for(Frame a: frame)
+			textArea.append(a.basicPrintOut()+"\n");
+			//System.out.println(a.basicPrintOut());
 		
-		textovaOblast.append("====================================================="+"\n");
+		textArea.append("====================================================="+"\n");
 		
-		if(ipecky1.size()!=0){
-			textovaOblast.append("\nIP adresy vysielajucich uzlov: "+"\n");
-			for(Ip a: ipecky1){
-				textovaOblast.append(a.getAdresa()+"\n");
+		if(IPs1.size()!=0){
+			textArea.append("\nIP addresses of sending nodes: "+"\n");
+			for(Ip a: IPs1){
+				textArea.append(a.getAddress()+"\n");
 			}
-			Collections.sort(ipecky1);
-			textovaOblast.append("\nNajviac bytov odoslala IP adresa "+ipecky1.get(0).getAdresa()+" ("+ipecky1.get(0).getPocet()+")\n");
-			textovaOblast.append("====================================================="+"\n");
+			Collections.sort(IPs1);
+			textArea.append("\nThe most bytes were send by IP: "+IPs1.get(0).getAddress()+" ("+IPs1.get(0).getCount()+")\n");
+			textArea.append("====================================================="+"\n");
 		}
 	}
 	
-	public void uloha3(String typ){
-		ArrayList<Ramec> ramce = hlavna.getRamce();
-		ArrayList<Ramec> kompletna = null;
-		ArrayList<Ramec> nekompletna = null;
-		JTextArea textovaOblast = okno.getTextovaOblast();
-		typ=typ.toUpperCase();
-		vyfiltrovane.clear();
-		if(!typ.equalsIgnoreCase("TFTP")){
-			for(Ramec a: ramce){
-				if(a.getFilter()!=null && typ.toUpperCase().equals(a.getFilter().toUpperCase())){
+	public void task2(String type){
+		ArrayList<Frame> frames = main.getFrames();
+		ArrayList<Frame> complete = null;
+		ArrayList<Frame> incomplete = null;
+		JTextArea textArea = window.getTextArea();
+		type=type.toUpperCase();
+		filtered.clear();
+		if(!type.equalsIgnoreCase("TFTP")){
+			for(Frame a: frames){
+				if(a.getFilter()!=null && type.toUpperCase().equals(a.getFilter().toUpperCase())){
 					//System.out.println(a.getCisloRamca());
-					vyfiltrovane.add(a);
+					filtered.add(a);
 				}
 			}
-			vypis(vyfiltrovane);
+			printableOutput(filtered);
 		}
 		else{
-			int cislo=-1;
-			for(int i=0;i<ramce.size();i++){
-				if(ramce.get(i).getFilter()!=null && typ.toUpperCase().equals(ramce.get(i).getFilter().toUpperCase())){
+			int number=-1;
+			for(int i=0;i<frames.size();i++){
+				if(frames.get(i).getFilter()!=null && type.toUpperCase().equals(frames.get(i).getFilter().toUpperCase())){
 					//System.out.println(a.getCisloRamca());
-					vyfiltrovane.add(ramce.get(i));
-					cislo++;
-					vyfiltrovane.get(vyfiltrovane.size()-1).setTFTPcislo(cislo);
-					for(int j=i+1;j<ramce.size();j++){
-						if("UDP".equalsIgnoreCase(ramce.get(j).getIP_protocol()) && jeRovnakaIP(ramce.get(i), ramce.get(j)) && ramce.get(i).getSourcePort()==ramce.get(j).getDestinationPort() && ramce.get(j).getSkontrolovana()!=true){
-							vyfiltrovane.add(ramce.get(j));
-							ramce.get(j).setSkontrolovana(true);
-							vyfiltrovane.get(vyfiltrovane.size()-1).setTFTPcislo(cislo);
-							for(int k=j+1;k<ramce.size();k++){
-								if("UDP".equalsIgnoreCase(ramce.get(k).getIP_protocol()) && jeKomunikacia(ramce.get(j), ramce.get(k))){
-									vyfiltrovane.add(ramce.get(k));
-									vyfiltrovane.get(vyfiltrovane.size()-1).setTFTPcislo(cislo);
-									ramce.get(k).setSkontrolovana(true);
+					filtered.add(frames.get(i));
+					number++;
+					filtered.get(filtered.size()-1).setTFTPnumber(number);
+					for(int j=i+1;j<frames.size();j++){
+						if("UDP".equalsIgnoreCase(frames.get(j).getIP_protocol()) && sameIP(frames.get(i), frames.get(j)) && frames.get(i).getSourcePort()==frames.get(j).getDestinationPort() && frames.get(j).getControlCheck()!=true){
+							filtered.add(frames.get(j));
+							frames.get(j).setControlCheck(true);
+							filtered.get(filtered.size()-1).setTFTPnumber(number);
+							for(int k=j+1;k<frames.size();k++){
+								if("UDP".equalsIgnoreCase(frames.get(k).getIP_protocol()) && thereIsCommunication(frames.get(j), frames.get(k))){
+									filtered.add(frames.get(k));
+									filtered.get(filtered.size()-1).setTFTPnumber(number);
+									frames.get(k).setControlCheck(true);
 								}
 							}
 						}	
 					}
 				}
 			}
-			/*for(int i=0;i<vyfiltrovane.size();i++){
-				System.out.println(vyfiltrovane.get(i));
-			}
-			System.out.println("teraz");*/
+	
 		}
 		
-		//vypis();
+	
 		
-		if(vyfiltrovane!=null && vyfiltrovane.size()!=0 && "TCP".equals(vyfiltrovane.get(0).getIP_protocol())){
+		if(filtered!=null && filtered.size()!=0 && "TCP".equals(filtered.get(0).getIP_protocol())){
 			
-			//if(typ.equals("HTTP") || typ.equals("HTTPS") || typ.equals("TELNET") || typ.equals("HTTPS"))
-			//	textovaOblast.setText("");
+
 			
-			hlavna.kompletna(vyfiltrovane);
+			main.complete(filtered);
 			
-			kompletna = hlavna.getKompletna();
-			nekompletna = hlavna.getNekompletna();
+			complete = main.getComplete();
+			incomplete = main.getIncomplete();
 			
-			if(kompletna!=null || nekompletna!=null)
-				textovaOblast.setText("");
+			if(complete!=null || incomplete!=null)
+				textArea.setText("");
 			
-			if(vyfiltrovane!=null && vyfiltrovane.size()!=0){
-				textovaOblast.append("================================================================="+"\n");
-				if(kompletna == null){
-					textovaOblast.append("Nenasla sa kompletna komunikacia\n");
+			if(filtered!=null && filtered.size()!=0){
+				textArea.append("================================================================="+"\n");
+				if(complete == null){
+					textArea.append("Complete communication was not found\n");
 				}
 				else{
-					textovaOblast.append("Nasla sa kompletna komunikacia\n");
-					Ramec pom = kompletna.get(0);
+					textArea.append("Complete communication was found\n");
+					Frame pom = complete.get(0);
 					if("unknown".equals(pom.getSourcePortName())){
-						textovaOblast.append("Klient: "+pom.getSourceIP()+": " + pom.getSourcePort());
-						textovaOblast.append("\tServer: "+pom.getDestinationIP()+": " + pom.getDestinationPort() +" (" +pom.getDestinationPortName()+")\n");
+						textArea.append("Client: "+pom.getSourceIP()+": " + pom.getSourcePort());
+						textArea.append("\tServer: "+pom.getDestinationIP()+": " + pom.getDestinationPort() +" (" +pom.getDestinationPortName()+")\n");
 					}
 					else{
-						textovaOblast.append("Klient: "+pom.getDestinationIP()+": " + pom.getDestinationPort());
-						textovaOblast.append("\tServer: "+pom.getSourceIP()+": " + pom.getSourcePort() +" (" +pom.getSourcePortName()+")\n");
+						textArea.append("Client: "+pom.getDestinationIP()+": " + pom.getDestinationPort());
+						textArea.append("\tServer: "+pom.getSourceIP()+": " + pom.getSourcePort() +" (" +pom.getSourcePortName()+")\n");
 					}
-					/*for(Ramec a: kompletna){
-						textovaOblast.append(a.zakladnyVypis()+"\n");
+					/*for(Frame a: complete){
+						textovaOblast.append(a.basicPrintOut()+"\n");
 					}*/
-					vypis(kompletna);
-					textovaOblast.append("================================================================="+"\n");
-					textovaOblast.append("Štatistika dĺžky rámcov v bajtoch:\n");
+					printableOutput(complete);
+					textArea.append("================================================================="+"\n");
+					textArea.append("Statistic of lenght of frame in bytes:\n");
 					
-					ArrayList<Velkost> velkosti = new ArrayList<Velkost>(50);
-					velkosti.add(new Velkost());
-					velkosti.get(0).setSpodna(0);
-					velkosti.get(0).setHorna(19);
-					for(int i=1;i<POCET_INTERVALOV;i++){
-						velkosti.add(new Velkost());
-						velkosti.get(i).setSpodna(velkosti.get(i-1).getHorna()+1);
-						velkosti.get(i).setHorna(velkosti.get(i).getSpodna()*2-1);
+					ArrayList<Size> sizes = new ArrayList<Size>(50);
+					sizes.add(new Size());
+					sizes.get(0).setDownOne(0);
+					sizes.get(0).setUpperOne(19);
+					for(int i=1;i<NUMBER_OF_INTERVALS;i++){
+						sizes.add(new Size());
+						sizes.get(i).setDownOne(sizes.get(i-1).getUpperOne()+1);
+						sizes.get(i).setUpperOne(sizes.get(i).getDownOne()*2-1);
 					}
 					
 					int max=0;
-					for(Ramec a: kompletna){
-						for(Velkost b: velkosti){
-							if(b.getSpodna()<=a.getVelkostDriver() && b.getHorna()>=a.getVelkostDriver()){
-								b.pridaj();
-								if(max<velkosti.indexOf(b)){
-									max=velkosti.indexOf(b);
+					for(Frame a: complete){
+						for(Size b: sizes){
+							if(b.getDownOne()<=a.getSizeOfDriver() && b.getUpperOne()>=a.getSizeOfDriver()){
+								b.add();
+								if(max<sizes.indexOf(b)){
+									max=sizes.indexOf(b);
 								}
 							}
 						}
 					}
 					for(int i=0;i<=max;i++){
-						textovaOblast.append(velkosti.get(i).getSpodna()+" - "+velkosti.get(i).getHorna()+":\t"+velkosti.get(i).getPocet()+"\n");
+						textArea.append(sizes.get(i).getDownOne()+" - "+sizes.get(i).getUpperOne()+":\t"+sizes.get(i).getCount()+"\n");
 					}
 				}
-				textovaOblast.append("================================================================="+"\n");
-				if(nekompletna == null){
-					textovaOblast.append("Nenasla sa nekompletna komunikacia\n");
+				textArea.append("================================================================="+"\n");
+				if(incomplete == null){
+					textArea.append("Complete communication was not found\n");
 				}
 				else{
-					textovaOblast.append("Nasla sa nekompletna komunikacia\n");
-					Ramec pom = nekompletna.get(0);
+					textArea.append("Complete communication was found\n");
+					Frame pom = incomplete.get(0);
 					if("unknown".equals(pom.getSourcePortName())){
-						textovaOblast.append("Klient: "+pom.getSourceIP()+": " + pom.getSourcePort());
-						textovaOblast.append("\tServer: "+pom.getDestinationIP()+": " + pom.getDestinationPort() +" (" +pom.getDestinationPortName()+")\n");
+						textArea.append("Client: "+pom.getSourceIP()+": " + pom.getSourcePort());
+						textArea.append("\tServer: "+pom.getDestinationIP()+": " + pom.getDestinationPort() +" (" +pom.getDestinationPortName()+")\n");
 					}
 					else{
-						textovaOblast.append("Klient: "+pom.getDestinationIP()+": " + pom.getDestinationPortName());
-						textovaOblast.append("\tServer: "+pom.getSourceIP()+": " + pom.getSourcePort() +" (" +pom.getSourcePortName()+")\n");
+						textArea.append("Client: "+pom.getDestinationIP()+": " + pom.getDestinationPortName());
+						textArea.append("\tServer: "+pom.getSourceIP()+": " + pom.getSourcePort() +" (" +pom.getSourcePortName()+")\n");
 					}
-					/*for(Ramec a: nekompletna){
-						textovaOblast.append(a.zakladnyVypis());
-					}*/
-					vypis(nekompletna);
+				
+					printableOutput(incomplete);
 				}
 			}
 		}
-		if(vyfiltrovane!=null && vyfiltrovane.size()!=0 && "ARP".toUpperCase().equals(vyfiltrovane.get(0).getFilter().toUpperCase())){
-			textovaOblast.setText("");
-			int cislo = 0;
-			for(int i=0;i<vyfiltrovane.size();i++){
-				if(!vyfiltrovane.get(i).getSkontrolovana() && "request".equals(vyfiltrovane.get(i).getARP_type())){
-					vyfiltrovane.get(i).setSkontrolovana(true);
-					textovaOblast.append("================================================================="+"\n");
-					textovaOblast.append("Komunikacia #"+(++cislo)+"\n");
-					textovaOblast.append("ARP-request, IP adresa: "+vyfiltrovane.get(i).getDestinationIP()+", MAC adresa: ???\n");
-					textovaOblast.append("Zdrojová IP: "+vyfiltrovane.get(i).getSourceIP()+", Cieľová IP: "+vyfiltrovane.get(i).getDestinationIP()+"\n");
-					textovaOblast.append(vyfiltrovane.get(i).zakladnyVypis()+"\n");
-					for(int j=i+1;j<vyfiltrovane.size();j++){
-						if("reply".equals(vyfiltrovane.get(j).getARP_type()) && !vyfiltrovane.get(j).getSkontrolovana() && jeKomunikacia(vyfiltrovane.get(i), vyfiltrovane.get(j))){
-							textovaOblast.append("Komunikacia #"+(cislo)+"\n");
-							textovaOblast.append("ARP-reply, IP adresa: "+vyfiltrovane.get(j).getSourceIP()+", MAC adresa: "+vyfiltrovane.get(j).getARP_sourceMAC()+"\n");
-							textovaOblast.append("Zdrojová IP: "+vyfiltrovane.get(j).getSourceIP()+", Cieľová IP: "+vyfiltrovane.get(j).getDestinationIP()+"\n");
-							textovaOblast.append(vyfiltrovane.get(j).zakladnyVypis()+"\n");
-							vyfiltrovane.get(j).setSkontrolovana(true);
+		if(filtered!=null && filtered.size()!=0 && "ARP".toUpperCase().equals(filtered.get(0).getFilter().toUpperCase())){
+			textArea.setText("");
+			int number = 0;
+			for(int i=0;i<filtered.size();i++){
+				if(!filtered.get(i).getControlCheck() && "request".equals(filtered.get(i).getARP_type())){
+					filtered.get(i).setControlCheck(true);
+					textArea.append("================================================================="+"\n");
+					textArea.append("Communication #"+(++number)+"\n");
+					textArea.append("ARP-request, IP address: "+filtered.get(i).getDestinationIP()+", MAC address: ???\n");
+					textArea.append("Source IP: "+filtered.get(i).getSourceIP()+", Cieľová IP: "+filtered.get(i).getDestinationIP()+"\n");
+					textArea.append(filtered.get(i).basicPrintOut()+"\n");
+					for(int j=i+1;j<filtered.size();j++){
+						if("reply".equals(filtered.get(j).getARP_type()) && !filtered.get(j).getControlCheck() && thereIsCommunication(filtered.get(i), filtered.get(j))){
+							textArea.append("Communication #"+(number)+"\n");
+							textArea.append("ARP-reply, IP adress: "+filtered.get(j).getSourceIP()+", MAC address: "+filtered.get(j).getARP_sourceMAC()+"\n");
+							textArea.append("Source IP: "+filtered.get(j).getSourceIP()+", Target IP: "+filtered.get(j).getDestinationIP()+"\n");
+							textArea.append(filtered.get(j).basicPrintOut()+"\n");
+							filtered.get(j).setControlCheck(true);
 							break;
 						}
-						if("request".equals(vyfiltrovane.get(j).getARP_type()) && !vyfiltrovane.get(j).getSkontrolovana() && jeKomunikacia(vyfiltrovane.get(i), vyfiltrovane.get(j))){
-							textovaOblast.append("Komunikacia #"+(cislo)+"\n");
-							textovaOblast.append("ARP-request, IP adresa: "+vyfiltrovane.get(j).getDestinationIP()+", MAC adresa: ???\n");
-							textovaOblast.append("Zdrojová IP: "+vyfiltrovane.get(j).getSourceIP()+", Cieľová IP: "+vyfiltrovane.get(j).getDestinationIP()+"\n");
-							textovaOblast.append(vyfiltrovane.get(j).zakladnyVypis()+"\n");
-							vyfiltrovane.get(j).setSkontrolovana(true);
+						if("request".equals(filtered.get(j).getARP_type()) && !filtered.get(j).getControlCheck() && thereIsCommunication(filtered.get(i), filtered.get(j))){
+							textArea.append("Communication #"+(number)+"\n");
+							textArea.append("ARP-request, IP address: "+filtered.get(j).getDestinationIP()+", MAC address: ???\n");
+							textArea.append("Source IP: "+filtered.get(j).getSourceIP()+", Target IP: "+filtered.get(j).getDestinationIP()+"\n");
+							textArea.append(filtered.get(j).basicPrintOut()+"\n");
+							filtered.get(j).setControlCheck(true);
 						}
 					}
 				}
 				else{
-					if(!vyfiltrovane.get(i).getSkontrolovana()){
-						textovaOblast.append("Komunikacia #"+(cislo++)+"\n"+"ARP-request, IP adresa: "+vyfiltrovane.get(i).getDestinationIP()+", MAC adresa: "+vyfiltrovane.get(i).getARP_sourceMAC()+"\n");
-						textovaOblast.append("Zdrojová IP: "+vyfiltrovane.get(i).getSourceIP()+", Cieľová IP: "+vyfiltrovane.get(i).getDestinationIP()+"\n");
-						textovaOblast.append(vyfiltrovane.get(i).zakladnyVypis()+"\n");
+					if(!filtered.get(i).getControlCheck()){
+						textArea.append("Communication #"+(number++)+"\n"+"ARP-request, IP address: "+filtered.get(i).getDestinationIP()+", MAC address: "+filtered.get(i).getARP_sourceMAC()+"\n");
+						textArea.append("Source IP: "+filtered.get(i).getSourceIP()+", Target IP: "+filtered.get(i).getDestinationIP()+"\n");
+						textArea.append(filtered.get(i).basicPrintOut()+"\n");
 					}
 				}
 			}
 		}
-		if(vyfiltrovane!=null && vyfiltrovane.size()!=0 && "TFTP".toUpperCase().equals(vyfiltrovane.get(0).getFilter().toUpperCase())){
-			int cislo=1,i;
-			textovaOblast.append("Komunikacia #"+(cislo++)+"\n");
-			for(i=1;i<vyfiltrovane.size();i++){
-				textovaOblast.append(vyfiltrovane.get(i-1).zakladnyVypis()+"\n");
-				if(vyfiltrovane.get(i).getTFTPcislo()!=vyfiltrovane.get(i-1).getTFTPcislo()){
-					textovaOblast.append("================================================================="+"\n");
-					textovaOblast.append("Komunikacia #"+(cislo++)+"\n");
+		if(filtered!=null && filtered.size()!=0 && "TFTP".toUpperCase().equals(filtered.get(0).getFilter().toUpperCase())){
+			int number=1,i;
+			textArea.append("Communication #"+(number++)+"\n");
+			for(i=1;i<filtered.size();i++){
+				textArea.append(filtered.get(i-1).basicPrintOut()+"\n");
+				if(filtered.get(i).getTFTPnumber()!=filtered.get(i-1).getTFTPnumber()){
+					textArea.append("================================================================="+"\n");
+					textArea.append("Communication #"+(number++)+"\n");
 				}
 			}
-			textovaOblast.append(vyfiltrovane.get(i-1).zakladnyVypis()+"\n");
+			textArea.append(filtered.get(i-1).basicPrintOut()+"\n");
 		}
-		if(vyfiltrovane!=null && vyfiltrovane.size()!=0 && "ICMP".toUpperCase().equals(vyfiltrovane.get(0).getFilter().toUpperCase())){
-			System.out.println("Tu som");
-			int cislo=1,i;
-			for(i=0;i<vyfiltrovane.size();i++){
-				textovaOblast.append(vyfiltrovane.get(i).toString()+"\n");
-				pridajICMP(vyfiltrovane.get(i).getSourceIP(), vyfiltrovane.get(i).getETH_sourceMAC(), 1);
+		if(filtered!=null && filtered.size()!=0 && "ICMP".toUpperCase().equals(filtered.get(0).getFilter().toUpperCase())){
+		
+			int number=1,i;
+			for(i=0;i<filtered.size();i++){
+				textArea.append(filtered.get(i).toString()+"\n");
+				addICMP(filtered.get(i).getSourceIP(), filtered.get(i).getETH_sourceMAC(), 1);
 			}
-			textovaOblast.append("=================================================================\n");
-			textovaOblast.append("Doimplementovane na cviku: \n");
-			for(ICMP a: ipecky2){
-				textovaOblast.append("IP: "+a.getAdresa()+" MAC: "+a.getMac()+"Pocet: "+a.getPocet()+"\n");
+			textArea.append("=================================================================\n");
+			for(ICMP a: IPs2){
+				textArea.append("IP: "+a.getAddress()+" MAC: "+a.getMac()+"Count: "+a.getCount()+"\n");
 			}
 		}
 	}
 		
-	public boolean jeKomunikacia(Ramec a1,Ramec a2){
-		String hlavnyIpPort1=a2.getSourceIP()+a2.getSourcePort();
-		String hlavnyIpPort2=a2.getDestinationIP()+a2.getDestinationPort();
-		String pomocnyIpPort1=a1.getSourceIP()+a1.getSourcePort();
-		String pomocnyIpPort2=a1.getDestinationIP()+a1.getDestinationPort();
-		if((hlavnyIpPort1.equals(pomocnyIpPort1) && hlavnyIpPort2.equals(pomocnyIpPort2)) ||
-				(hlavnyIpPort1.equals(pomocnyIpPort2) && hlavnyIpPort2.equals(pomocnyIpPort1))){
+	public boolean thereIsCommunication(Frame a1,Frame a2){
+		String mainIPport1=a2.getSourceIP()+a2.getSourcePort();
+		String mainIPport2=a2.getDestinationIP()+a2.getDestinationPort();
+		String temporaryIPport1=a1.getSourceIP()+a1.getSourcePort();
+		String temporaryIPport2=a1.getDestinationIP()+a1.getDestinationPort();
+		if((mainIPport1.equals(temporaryIPport1) && mainIPport2.equals(temporaryIPport2)) ||
+				(mainIPport1.equals(temporaryIPport2) && mainIPport2.equals(temporaryIPport1))){
 			return true;
 		}
 		return false;
 	}
 	
-	public boolean jeRovnakaIP(Ramec a1, Ramec a2){
-		String hlavnyIpPort1=a2.getSourceIP();
-		String hlavnyIpPort2=a2.getDestinationIP();
-		String pomocnyIpPort1=a1.getSourceIP();
-		String pomocnyIpPort2=a1.getDestinationIP();
-		if((hlavnyIpPort1.equals(pomocnyIpPort1) && hlavnyIpPort2.equals(pomocnyIpPort2)) ||
-				(hlavnyIpPort1.equals(pomocnyIpPort2) && hlavnyIpPort2.equals(pomocnyIpPort1))){
+	public boolean sameIP(Frame a1, Frame a2){
+		String mainIPport1=a2.getSourceIP();
+		String mainIPport2=a2.getDestinationIP();
+		String temporaryIPport1=a1.getSourceIP();
+		String temporaryIPport2=a1.getDestinationIP();
+		if((mainIPport1.equals(temporaryIPport1) && mainIPport2.equals(temporaryIPport2)) ||
+				(mainIPport1.equals(temporaryIPport2) && mainIPport2.equals(temporaryIPport1))){
 			return true;
 		}
 		return false;
 	}
 	
-	public void vypis(ArrayList<Ramec> vyfiltrovane){
+	public void printableOutput(ArrayList<Frame> filtered){
 		
 		//for(int i=0;i<vyfiltrovane.size();i++)
-		//	okno.getTextovaOblast().append(vyfiltrovane.get(i).zakladnyVypis()+"\n");
+		//	okno.getTextovaOblast().append(vyfiltrovane.get(i).basicPrintOut()+"\n");
 		
-		if(vyfiltrovane.size()>20){
+		if(filtered.size()>20){
 			for(int i=0;i<10;i++)
-				okno.getTextovaOblast().append(vyfiltrovane.get(i).zakladnyVypis()+"\n");			//zmenit na pokrocily vypis
-			for(int i=vyfiltrovane.size()-10;i<vyfiltrovane.size();i++)
-				okno.getTextovaOblast().append(vyfiltrovane.get(i).zakladnyVypis()+"\n");			//zmenit na pokrocily vypis
+				window.getTextArea().append(filtered.get(i).basicPrintOut()+"\n");			//zmenit na pokrocily printableOutput
+			for(int i=filtered.size()-10;i<filtered.size();i++)
+				window.getTextArea().append(filtered.get(i).basicPrintOut()+"\n");			//zmenit na pokrocily printableOutput
 		}
 		else{
-			for(int i=0;i<vyfiltrovane.size();i++)
-				okno.getTextovaOblast().append(vyfiltrovane.get(i).zakladnyVypis()+"\n");
+			for(int i=0;i<filtered.size();i++)
+				window.getTextArea().append(filtered.get(i).basicPrintOut()+"\n");
 		}
 	}
 	
-	public void pridajICMP(String SA, String MAC, int velkost){
+	public void addICMP(String SA, String MAC, int size){
 		
-		for(ICMP a: ipecky2){
-			if(a.getAdresa().equalsIgnoreCase(SA) && a.getMac().equalsIgnoreCase(MAC)){
-				a.setPocet(a.getPocet()+velkost);
+		for(ICMP a: IPs2){
+			if(a.getAddress().equalsIgnoreCase(SA) && a.getMac().equalsIgnoreCase(MAC)){
+				a.setCount(a.getCount()+size);
 				return;
 			}
 		}
-		ipecky2.add(new ICMP(SA,MAC,velkost));
+		IPs2.add(new ICMP(SA,MAC,size));
 		
 	}
 	

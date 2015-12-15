@@ -2,32 +2,32 @@ package Objects;
 
 public class Ip implements Comparable<Ip>{
 
-	private String adresa;
-	private int pocet;
+	private String address;
+	private int count;
 	
 	public int compareTo(Ip arg0) {
-		return arg0.pocet - this.pocet;
+		return arg0.count - this.count;
 	}
 
-	public String getAdresa() {
-		return adresa;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setAdresa(String adresa) {
-		this.adresa = adresa;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
-	public int getPocet() {
-		return pocet;
+	public int getCount() {
+		return count;
 	}
 
-	public void setPocet(int pocet) {
-		this.pocet = pocet;
+	public void setCount(int count) {
+		this.count = count;
 	}
 	
-	public Ip(String adresa, int velkost){
-		this.adresa=adresa;
-		this.pocet=velkost;
+	public Ip(String address, int size){
+		this.address=address;
+		this.count=size;
 	}
 
 }

@@ -33,14 +33,14 @@ public class PacketReader {
 		Pcap pcap = Pcap.openOffline(file, errbuf);
 
 		if (pcap == null) {
-			System.err.printf("Chyba pri otvarani pcap suboru: "+errbuf.toString());
+			System.err.printf("Error while opening PCAP file: "+errbuf.toString());
 			//return null;
                          // add if no file !! = error  
 		}
 
 		PcapPacketHandler<String> jpacketHandler = new PcapPacketHandler<String>() {
 			/*
-			 * String vstup =
+			 * String enter =
 			 * "00 04 76 A4 E4 8C 00 00 C0 D7 80 C2 08 00 45 00\n" +
 			 * "00 28 0C 36 40 00 80 06 2B 5A 93 AF 62 EE 45 38\n" +
 			 * "87 6A 04 70 00 50 7E 6C 06 32 56 7D 30 A8 50 10\n" +
@@ -53,10 +53,10 @@ public class PacketReader {
 			public void nextPacket(PcapPacket packet, String user) {
 				//String vstup = packet.toHexdump(packet.getTotalSize(), false, false, true).trim().replaceAll("  ", " ").replaceAll("\n ", "\n");
 				//System.out.println(vstup+"\n\n");
-				String vstup = getHexDump(packet);	
+				String entryString = getHexDump(packet);	
 				//System.out.println(packet.getPacketWirelen() + " " + packet.getTotalSize());
 				
-				packety.add(vstup);
+				packety.add(entryString);
 			}
 		};
 

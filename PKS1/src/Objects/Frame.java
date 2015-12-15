@@ -1,21 +1,21 @@
 package Objects;
 
-public class Ramec {
-	private int cisloRamca,velkostDriver,velkostMedium,IPverzia,sourcePort,destinationPort,TFTPcislo;
-	private String ramecHexa,typ,filter,ICMP_type,ARP_type;
+public class Frame {
+	private int frameNumber,sizeOfDriver,sizeOfMedium,IP_version,sourcePort,destinationPort,TFTPnumber;
+	private String hexaFrame,type,filter,ICMP_type,ARP_type;
 	private String ETH_sourceMAC,ETH_destinationMAC,ETH_type;
 	private String IP_protocol,sourceIP,destinationIP;
 	private String sourcePortName,destinationPortName;
 	private String ARP_sourceMAC,ARP_destinationMAC;
-	private Boolean skontrolovana;
+	private Boolean controlCheck;
 	private char SYN,FIN,RST,ACK;
 	
 	
-	public int getTFTPcislo() {
-		return TFTPcislo;
+	public int getTFTPnumber() {
+		return TFTPnumber;
 	}
-	public void setTFTPcislo(int tFTPcislo) {
-		TFTPcislo = tFTPcislo;
+	public void setTFTPnumber(int tFTPnumber) {
+		tFTPnumber = tFTPnumber;
 	}
 	public String getICMP_type() {
 		return ICMP_type;
@@ -47,8 +47,8 @@ public class Ramec {
 	public void setACK(char aCK) {
 		ACK = aCK;
 	}
-	public int getIPverzia() {
-		return IPverzia;
+	public int getIP_version() {
+		return IP_version;
 	}
 	public int getSourcePort() {
 		return sourcePort;
@@ -62,32 +62,32 @@ public class Ramec {
 	public void setDestinationPort(int destinationPort) {
 		this.destinationPort = destinationPort;
 	}
-	public void setIPverzia(int oPverzia) {
-		IPverzia = oPverzia;
+	public void setIP_version(int iPversion) {
+		IP_version = iPversion;
 	}
-	public String getTyp() {
-		return typ;
+	public String getType() {
+		return type;
 	}
-	public void setTyp(String typ) {
-		this.typ = typ;
+	public void setType(String type) {
+		this.type = type;
 	}	
-	public int getCisloRamca() {
-		return cisloRamca;
+	public int getFrameNumber() {
+		return frameNumber;
 	}
-	public void setCisloRamca(int cisloRamca) {
-		this.cisloRamca = cisloRamca;
+	public void setFrameNumber(int frameNumber) {
+		this.frameNumber = frameNumber;
 	}
-	public int getVelkostDriver() {
-		return velkostDriver;
+	public int getSizeOfDriver() {
+		return sizeOfDriver;
 	}
-	public void setVelkostDriver(int velkostDriver) {
-		this.velkostDriver = velkostDriver;
+	public void setSizeOfDriver(int sizeOfDriver) {
+		this.sizeOfDriver = sizeOfDriver;
 	}
-	public String getRamecHexa() {
-		return ramecHexa;
+	public String getHexaFrame() {
+		return hexaFrame;
 	}
-	public void setRamecHexa(String ramecHexa) {
-		this.ramecHexa = ramecHexa;
+	public void setHexaFrame(String hexaFrame) {
+		this.hexaFrame = hexaFrame;
 	}
 	public String getETH_sourceMAC() {
 		return ETH_sourceMAC;
@@ -139,43 +139,42 @@ public class Ramec {
 	}
 	@Override
 	public String toString() {
-		StringBuilder vypis = new StringBuilder();
-		
-		vypis.append("Rámec #" + cisloRamca + "\nDĺžka rámca poskytnutá paketovým drajverom - "
-				+ velkostDriver + "\nDĺžka rámca prenášaného po médiu - " + velkostMedium
-				+ "\n" + ETH_type + "\nZdrojová MAC adresa: " + ETH_sourceMAC.toUpperCase() + "\nCieľová MAC adresa: "
+		StringBuilder printOut = new StringBuilder();
+		printOut.append("Frame #" + frameNumber + "\nLenght of frame given by packet driver - "
+				+ sizeOfDriver + "\nLenght of frame transfering via medium - " + sizeOfMedium
+				+ "\n" + ETH_type + "\nSource MAC address: " + ETH_sourceMAC.toUpperCase() + "\nTarget MAC adress: "
 				+ ETH_destinationMAC.toUpperCase() + "\n");
 		
 		if("ICMP".toUpperCase().equals(filter.toUpperCase())){
-			vypis.append("ICMP typ: "+ICMP_type+"\n");
+			printOut.append("ICMP type: "+ICMP_type+"\n");
 		}
 		
-		vypis.append(ramecHexa.toUpperCase() + "\n");
+		printOut.append(hexaFrame.toUpperCase() + "\n");
 		
-		return vypis.toString();
+		return printOut.toString();
 	}
 	
-	public String zakladnyVypis(){
-		return "Rámec #" + cisloRamca + "\nDĺžka rámca poskytnutá paketovým drajverom - "
-				+ velkostDriver + "\nDĺžka rámca prenášaného po médiu - " + velkostMedium
-				+ "\n" + ETH_type + "\nZdrojová MAC adresa: " + ETH_sourceMAC.toUpperCase() + "\nCieľová MAC adresa: "
-				+ ETH_destinationMAC.toUpperCase() + "\n" + ramecHexa.toUpperCase() + "\n";
+	public String basicPrintOut(){
+		return "Frame #" + frameNumber + "\nLenght of frame given by packet driver - "
+				+ sizeOfDriver + "\nLenght of frame transfering via medium - " + sizeOfMedium
+				+ "\n" + ETH_type + "\nSource MAC address: " + ETH_sourceMAC.toUpperCase() + "\nTarget MAC adress: "
+				+ ETH_destinationMAC.toUpperCase() + "\n" + hexaFrame.toUpperCase() + "\n";
 	}
 	
-	public int getVelkostMedium() {
-		return velkostMedium;
+	public int getSizeOfMedium() {
+		return sizeOfMedium;
 	}
-	public void setVelkostMedium(int velkostMedium) {
-		this.velkostMedium = velkostMedium;
+	public void setSizeOfMedium(int sizeOfMedium) {
+		this.sizeOfMedium = sizeOfMedium;
 	}
-	public Ramec() {
-		this.skontrolovana=false;
+	public Frame() {
+		this.controlCheck=false;
 	}
-	public Boolean getSkontrolovana() {
-		return skontrolovana;
+	public Boolean getControlCheck() {
+		return controlCheck;
 	}
-	public void setSkontrolovana(Boolean skontrolovana) {
-		this.skontrolovana = skontrolovana;
+	public void setControlCheck(Boolean controlCheck) {
+		this.controlCheck = controlCheck;
 	}
 	public String getFilter() {
 		return filter;

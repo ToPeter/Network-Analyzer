@@ -1,24 +1,24 @@
 package Objects;
 
 public class ICMP {
-	private String adresa;
+	private String address;
 	private String mac;
-	private int pocet;
+	private int count;
 
-	public String getAdresa() {
-		return adresa;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setAdresa(String adresa) {
-		this.adresa = adresa;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
-	public int getPocet() {
-		return pocet;
+	public int getCount() {
+		return count;
 	}
 
-	public void setPocet(int pocet) {
-		this.pocet = pocet;
+	public void setCount(int count) {
+		this.count = count;
 	}
 	
 	public String getMac() {
@@ -29,9 +29,9 @@ public class ICMP {
 		this.mac = mac;
 	}
 
-	public ICMP(String adresa, String mac, int velkost){
-		this.adresa=adresa;
-		this.pocet=velkost;
+	public ICMP(String address, String mac, int size){
+		this.address=address;
+		this.count=size;
 		this.mac = mac;
 	}
 }
